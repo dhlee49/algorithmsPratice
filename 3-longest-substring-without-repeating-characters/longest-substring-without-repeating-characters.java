@@ -14,7 +14,6 @@ class Solution {
                     start = charPos + 1;
                 }
             }
-            System.out.println(start);
             ans.put(c, i);
         }
         if(s.length() - start > max) max = s.length() - start;
