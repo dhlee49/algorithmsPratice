@@ -12,9 +12,6 @@ class Solution {
                 hours += (banana / curr); 
                 if(banana % curr > 0) hours++;
             }
-             System.out.println(curr);
-              System.out.println(hours);
-               System.out.println("done");
             if(hours > h) {
                 min = curr;
             } else {
