@@ -1,21 +1,17 @@
 class LRUCache {
-    private int capacity;
     private Node head;
     private Node tail;
-    private HashMap<Integer, Node> hashIndex;
+    private int capacity;
+    private HashMap<Integer, Node> cache;
     class Node {
-        int key;
-        int val;
-        Node next;
         Node prev;
-        private Node() {
-            this.key = -1;
-            this.val = -1;
-        }
-        private Node(int key, int val) {
+        Node next;
+        int val;
+        int key;
+        public Node(int key, int value) {
             this.key = key;
-            this.val = val;
-        }
+            this.val = value;
+        };
     }
     public LRUCache(int capacity) {
         this.capacity = capacity;
@@ -23,54 +19,46 @@ class LRUCache {
         this.tail = new Node(-1, -1);
         this.head.next = this.tail;
         this.tail.prev = this.head;
-        this.hashIndex = new HashMap();
+        this.cache = new HashMap();
     }
     
     public int get(int key) {
-        if(this.hashIndex.containsKey(key)) {
-            Node curr =  this.hashIndex.get(key);
-            moveToTail(curr);
-            return tail.prev.val;
-        }
-        return -1;
-    }
-    public void put(int key, int value) {
-        //Case 1 : item already exists. Move item to tail and update value
-        if(this.hashIndex.containsKey(key)) {
-            Node curr = this.hashIndex.get(key);
-            curr.val = value;
-            moveToTail(curr);
-            return;
-        }
-        //Case 2 : item is not present but if we reached size limit, remove head.
-
-        Node newNode = new Node(key, value);
-        addToTail(newNode);
-        this.hashIndex.put(key, newNode);
-
-        if(this.hashIndex.size() > this.capacity) {
-            this.hashIndex.remove(this.head.next.key);
-            removeNode(this.head.next);
-            
-        }
-    }
-    private void moveToTail(Node curr) { 
+        if(!cache.containsKey(key)) return -1;
+        Node curr = cache.get(key);
         removeNode(curr);
         addToTail(curr);
+        return curr.val;
     }
-    //Add node to tail
-    private void addToTail(Node curr) {
-        curr.next = this.tail;
-        curr.prev = this.tail.prev;
-        this.tail.prev.next = curr;
-        this.tail.prev = curr;
-    }
-    //Function to remove node from the LinkedList
-    private void removeNode(Node curr) {
-        Node next = curr.next;
-        Node prev = curr.prev;
+    private void removeNode(Node target) {
+        Node prev = target.prev;
+        Node next = target.next;
         prev.next = next;
         next.prev = prev;
+    }
+    private void addToTail(Node target) {
+        Node prev = this.tail.prev;
+        target.next = this.tail;
+        target.prev = prev;
+        prev.next = target;
+        this.tail.prev = target;
+    }
+    public void put(int key, int value) {
+        //Case 1 already exists
+        if(cache.containsKey(key)) {
+            Node curr = cache.get(key);
+            removeNode(curr);
+            addToTail(curr);
+            curr.val = value;
+            return;
+        }
+        //Case 2 not in it
+        Node newNode = new Node(key, value);
+        cache.put(key, newNode);
+        addToTail(newNode);
+        if(cache.size() > this.capacity) {
+            cache.remove(this.head.next.key);
+            removeNode(this.head.next);
+        }
     }
 }
 
