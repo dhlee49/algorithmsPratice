@@ -12,55 +12,59 @@ class Solution {
     public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
         int l1Size = getSize(l1);
         int l2Size = getSize(l2);
-        if(l1Size > l2Size) return getFullCalc(l1,l2, l1Size, l2Size);
-        return getFullCalc(l2,l1, l2Size, l1Size);
-    }
-    private ListNode getFullCalc(ListNode first, ListNode second, int firstSize, int secondSize) {
+
+        if(l2Size > l1Size) return addTwoNumbers(l2, l1);
+        int iteration = Math.min(l1Size, l2Size);
+        int carry = 0;
+        int val = 0;
         ListNode head = null;
         ListNode curr = null;
-        ListNode prev = null;
-        int carry = 0;
-        int value = 0;
-        while(secondSize > 0) {
-            secondSize--;
-            firstSize--;
-            value = (carry + first.val  + second.val) % 10;
-            carry = (carry + first.val + second.val) / 10;
+        ListNode next = null;
+        while(iteration >= 0) {
+            iteration--;
+            val = (l1.val + l2.val + carry) % 10;
+            carry = (l1.val + l2.val + carry) / 10;
+            System.out.println(val);
             if(head == null) {
-                head = new ListNode(value);
+                head = new ListNode(val);
                 curr = head;
             } else {
-                prev = curr;
-                curr =  new ListNode(value);
-                prev.next = curr;
+                next = new ListNode(val);
+                curr.next = next;
+                curr = next;
             }
-            first = first.next;
-            second = second.next;
+            l1 = l1.next;
+            l2 = l2.next;
         }
-        while(carry > 0 && firstSize > 0) {
-            firstSize--;
-            value = (carry + first.val) % 10;
-            carry = (carry + first.val) / 10;
-            curr.next = first;
-            first.val = value;
-            curr = first;
-            first = first.next;
+        if(l1 == null && carry == 1) {
+            curr.next = new ListNode(1);
         }
-        //We have 2 possible cases
-        // 1. No more carry 2.No more nodes
-        if(firstSize > 0) {
-            //Add node 
-            curr.next = first;
-        } else if(carry > 0) {
-            curr.next = new ListNode(carry);
+        //Case 1 No more nodes left
+        if(l1 == null) {
+            return head;
+        }
+        curr.next = l1;
+        //Case 3 There are nodes left & carry
+        ListNode prev = curr;
+        while(l1 != null & carry > 0) {
+            val = (l1.val + carry) % 10;
+            carry = (l1.val + carry) / 10;
+            l1.val = val;
+            prev = l1;
+            l1 = l1.next;
+
+        }
+        if(carry == 1) {
+            prev.next = new ListNode(1);
         }
         return head;
+
     }
-    private int getSize(ListNode curr) {
-        int size = 1;
-        while(curr.next != null) {
+    private int getSize(ListNode node) {
+        int size = 0;
+        while(node.next != null) {
+            node = node.next;
             size++;
-            curr = curr.next;
         }
         return size;
     }
