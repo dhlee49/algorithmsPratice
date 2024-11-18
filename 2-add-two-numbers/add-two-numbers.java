@@ -24,7 +24,6 @@ class Solution {
             iteration--;
             val = (l1.val + l2.val + carry) % 10;
             carry = (l1.val + l2.val + carry) / 10;
-            System.out.println(val);
             if(head == null) {
                 head = new ListNode(val);
                 curr = head;
@@ -36,10 +35,11 @@ class Solution {
             l1 = l1.next;
             l2 = l2.next;
         }
+        //Case 1 No more nodes, but there is carry
         if(l1 == null && carry == 1) {
             curr.next = new ListNode(1);
         }
-        //Case 1 No more nodes left
+        //Case 2 No more nodes left
         if(l1 == null) {
             return head;
         }
