@@ -3,12 +3,14 @@ class Solution {
         //2 base case, size 1 ~ 2
         if(nums.length == 1) return nums[0];
         if(nums.length == 2) return Math.max(nums[0], nums[1]);
-        int[] ans = new int[nums.length];
-        ans[0] = nums[0];
-        ans[1] = Math.max(nums[0], nums[1]);
+        int first = nums[0];
+        int second = Math.max(nums[1], nums[0]);
+        int curr = 0;
         for(int i = 2; i < nums.length; i++) {
-            ans[i] = Math.max(nums[i] + ans[i - 2], ans[i - 1]);
+            curr = Math.max(first + nums[i], second);
+            first = second;
+            second = curr;
         }
-        return Math.max(ans[nums.length - 2], ans[nums.length - 1]);
+        return Math.max(first, second);
     }
 }
