@@ -10,7 +10,8 @@ class Solution {
         }
         //Now i have 
         //stopToBus : Bus stop -> Bus #
-        HashSet<Integer> visited = new HashSet<>();
+        HashSet<Integer> visitedBus = new HashSet<>();
+        HashSet<Integer> visitedStation = new HashSet<>();
         Queue<Integer> bfs = new LinkedList<>();
         bfs.offer(source);
         int size = 0;
@@ -22,11 +23,13 @@ class Solution {
             for(int i = 0; i < size; i++) {
                 //Curr = station
                 int curr = bfs.poll();
+                if(visitedStation.contains(curr)) continue;
+                visitedStation.add(curr);
                 //Station does not have any route available
                 if(!stopToBus.containsKey(curr)) continue;
                 for(int bus: stopToBus.get(curr)) {
-                    if(visited.contains(bus)) continue;
-                    visited.add(bus);
+                    if(visitedBus.contains(bus)) continue;
+                    visitedBus.add(bus);
                     for(int stop : routes[bus]) {
                         if(stop == target) return count;
                         bfs.offer(stop);
