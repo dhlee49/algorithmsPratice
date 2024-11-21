@@ -13,7 +13,6 @@ class Solution {
             if(arr[mid] < arr[mid - 1] && arr[mid] > arr[mid + 1]) end = mid;
             mid = (start + end + 1) / 2;
         }
-        if(mid == start) return start + 1;
         return end;
 
     }
