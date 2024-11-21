@@ -7,7 +7,6 @@ class Solution {
         if(arr[0] > arr[1]) return 0;
         if(arr[end] > arr[end - 1]) return end;
         while(start < mid && end > mid) {
-            System.out.println(start + " and " + mid + " and " + end);
             if(arr[mid] > arr[mid - 1] && arr[mid] > arr[mid + 1]) return mid;
             if(arr[mid] > arr[mid - 1] && arr[mid] < arr[mid + 1]) start = mid;
             if(arr[mid] < arr[mid - 1] && arr[mid] > arr[mid + 1]) end = mid;
