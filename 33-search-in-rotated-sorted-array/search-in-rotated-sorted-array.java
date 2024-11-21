@@ -19,7 +19,7 @@ class Solution {
             mid = (start + end + 1) / 2;
             if(target == nums[mid]) return mid;
             if(target > nums[mid]) {
-                if(nums[mid] >= nums[0]) {
+                if(nums[mid] > nums[0]) {
                     start = mid + 1;
                 } else {
                     end = mid - 1;
