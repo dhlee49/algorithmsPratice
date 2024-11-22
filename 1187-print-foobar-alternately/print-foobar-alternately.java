@@ -1,34 +1,40 @@
 class FooBar {
     private int n;
-    private boolean lock;
+    private Object lock;
+    private boolean first;
+    private boolean second;
     public FooBar(int n) {
         this.n = n;
-        this.lock = false;
+        lock = new Object();
+        first = false;
+        second = true;
     }
 
-    public synchronized void foo(Runnable printFoo) throws InterruptedException {
+    public void foo(Runnable printFoo) throws InterruptedException {
         
         for (int i = 0; i < n; i++) {
-            while(lock) {
-               wait(); 
+            synchronized(lock) {
+                while(first) lock.wait();
+                printFoo.run();
+                second = false;
+                first = true;
+                lock.notifyAll();
             }
         	// printFoo.run() outputs "foo". Do not change or remove this line.
-        	printFoo.run();
-            lock = true;
-            notifyAll();
         }
     }
 
-    public synchronized void bar(Runnable printBar) throws InterruptedException {
+    public void bar(Runnable printBar) throws InterruptedException {
         
         for (int i = 0; i < n; i++) {
-            while(!lock) {
-                wait();
+            
+            synchronized(lock) {
+                while(second) lock.wait();
+                printBar.run();
+                second = true;
+                first = false;
+                lock.notifyAll();
             }
-            // printBar.run() outputs "bar". Do not change or remove this line.
-        	printBar.run();
-            lock = false;
-            notifyAll();
         }
     }
 }
