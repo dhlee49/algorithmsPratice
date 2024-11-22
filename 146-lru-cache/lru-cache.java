@@ -1,64 +1,68 @@
 class LRUCache {
-    private Node head;
-    private Node tail;
-    private int capacity;
-    private HashMap<Integer, Node> cache;
     class Node {
-        Node prev;
-        Node next;
         int val;
         int key;
-        public Node(int key, int value) {
+        Node next;
+        Node prev;
+        public Node (int key, int val) {
             this.key = key;
-            this.val = value;
-        };
+            this.val = val;
+            next = null;
+            prev = null;
+        }
     }
+    Node head;
+    Node tail;
+    int capacity;
+    HashMap<Integer, Node> cache;
+    List<Node> entries = new LinkedList<Node>(); 
     public LRUCache(int capacity) {
         this.capacity = capacity;
         this.head = new Node(-1, -1);
         this.tail = new Node(-1, -1);
         this.head.next = this.tail;
         this.tail.prev = this.head;
-        this.cache = new HashMap();
+        this.cache = new HashMap<>();
     }
     
     public int get(int key) {
-        if(!cache.containsKey(key)) return -1;
-        Node curr = cache.get(key);
+        if(!this.cache.containsKey(key)) return -1;
+        Node curr = this.cache.get(key); 
         removeNode(curr);
-        addToTail(curr);
+        putAtTail(curr);
         return curr.val;
     }
-    private void removeNode(Node target) {
-        Node prev = target.prev;
-        Node next = target.next;
-        prev.next = next;
-        next.prev = prev;
-    }
-    private void addToTail(Node target) {
-        Node prev = this.tail.prev;
-        target.next = this.tail;
-        target.prev = prev;
-        prev.next = target;
-        this.tail.prev = target;
-    }
+    
     public void put(int key, int value) {
-        //Case 1 already exists
-        if(cache.containsKey(key)) {
-            Node curr = cache.get(key);
-            removeNode(curr);
-            addToTail(curr);
+        if(this.cache.containsKey(key)) {
+            Node curr = this.cache.get(key);
             curr.val = value;
+            removeNode(curr);
+            putAtTail(curr);
             return;
         }
-        //Case 2 not in it
-        Node newNode = new Node(key, value);
-        cache.put(key, newNode);
-        addToTail(newNode);
-        if(cache.size() > this.capacity) {
-            cache.remove(this.head.next.key);
+        Node curr = new Node(key, value);
+        putAtTail(curr);
+        this.cache.put(key, curr);
+        if(this.cache.size() > this.capacity) {
+            int removedKey = this.head.next.key;
             removeNode(this.head.next);
+            this.cache.remove(removedKey);
         }
+    }
+    private void putAtTail(Node newNode) {
+        Node prev = this.tail.prev;
+        prev.next = newNode;
+        newNode.prev = prev;
+        newNode.next = this.tail;
+        this.tail.prev = newNode;
+    }
+
+
+    private void removeNode(Node curr) {
+        Node prev = curr.prev;
+        prev.next = curr.next;
+        curr.next.prev = prev;
     }
 }
 
