@@ -1,53 +1,49 @@
 class ZeroEvenOdd {
     private int n;
-    private boolean zerolock;
-    private boolean oddLock;
-    private boolean evenLock;
+    private boolean printZero;
+    private boolean printOne;
+    private boolean printTwo;
     
     public ZeroEvenOdd(int n) {
         this.n = n;
-        this.zerolock = false;
-        this.oddLock = true;
-        this.evenLock = true;
+        printZero = true;
+        printOne = false;
+        printTwo = false;
     }
 
     // printNumber.accept(x) outputs "x", where x is an integer.
     public synchronized void zero(IntConsumer printNumber) throws InterruptedException {
-        for(int i = 1; i <=n; i++) {
-            while(zerolock) {
-                wait();
-            }
+        for(int i = 1; i <= n; i ++) {
+            while(!printZero) wait();
             printNumber.accept(0);
-            if(i % 2 == 0) {
-                evenLock = false;
+            printZero = false;
+            if(i % 2 == 1) {
+                printOne = true;
+                printTwo = false;
             } else {
-                oddLock = false;
+                printOne = false;
+                printTwo = true;
             }
-            zerolock = true;
-            notifyAll();
-        }
-    }
-
-    public synchronized void even(IntConsumer printNumber) throws InterruptedException {
-        for(int i = 2; i <= n; i = i + 2) {
-            while(evenLock) {
-                wait();
-            }
-            printNumber.accept(i);
-            this.zerolock = false;
-            this.evenLock = true;
             notifyAll();
         }
     }
 
     public synchronized void odd(IntConsumer printNumber) throws InterruptedException {
-        for(int i = 1; i <= n; i = i + 2) {
-            while(oddLock) {
-                wait();
-            }
+        for(int i = 1; i <= n; i += 2) {
+            while(!printOne) wait();
             printNumber.accept(i);
-            this.zerolock = false;
-            this.oddLock = true;
+            printOne = false;
+            printZero = true;
+            notifyAll();
+        }
+    }
+
+    public synchronized void even(IntConsumer printNumber) throws InterruptedException {
+        for(int i = 2; i <= n; i += 2) {
+            while(!printTwo) wait();
+            printNumber.accept(i);
+            printTwo = false;
+            printZero = true;
             notifyAll();
         }
     }
