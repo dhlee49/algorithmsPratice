@@ -13,45 +13,47 @@ class Node {
 }
 */
 
-
-
-
 class Solution {
     public Node copyRandomList(Node head) {
         if(head == null) return null;
-        Node newNode = null;
         Node curr = head;
-        Node next;
-        Node skip;
+        //Copy regualr
         while(curr != null) {
-            skip = curr.next;
-            newNode = new Node(curr.val);
+            Node newNode = new Node(curr.val);
+            Node next = curr.next;
             curr.next = newNode;
-            newNode.next = skip;
-            curr = skip;
-        } 
-        //So far we've set everything correctly. set random correclty.
+            newNode.next = next;
+            curr = next;
+        }
+        //Copy the random
         curr = head;
+        Node copy = head.next;
         while(curr != null) {
-            next = curr.next;
-            skip = next.next;
-            if(curr.random != null) {            
-                next.random = curr.random.next;
+            if(curr.random == null) {
+                copy.random = null;
             } else {
-                next.random = null;
+                copy.random = curr.random.next;
             }
-            curr = skip;
+            curr = curr.next.next;
+            if(curr != null) copy = curr.next;
         }
+
+        //Detach the list
         curr = head;
-        Node newHead = curr.next;
-        Node newCurr = newHead;
-        while(newCurr.next != null) {
-            curr.next = curr.next.next;
-            curr = curr.next;
-            newCurr.next = newCurr.next.next;
-            newCurr = newCurr.next;
+        copy = head.next;
+             head = copy;
+        while(curr != null) {
+            Node next = copy.next;
+            curr.next = next;
+            if(next == null) {
+                copy.next = null;
+            } else {            
+                copy.next = next.next;
+            }
+            curr = next;
+            copy = copy.next;
         }
-        curr.next = null;
-        return newHead;
+        return head;
+        
     }
 }
