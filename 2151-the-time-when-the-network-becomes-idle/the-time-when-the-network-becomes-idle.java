@@ -19,14 +19,13 @@ class Solution {
             if(visited.contains(curr)) continue;
             visited.add(curr);
             //curr = current node
-            if(graph.containsKey(curr)) {
                 for(int point : graph.get(curr)) {
                     if(distances[curr] + 1 < distances[point]) {
                         distances[point] = distances[curr] + 1;
                         pq.offer(point);
                     }
                 }
-            }
+            
         }
         int carry = 1;
         for(int i = 1; i < patience.length; i++) {
