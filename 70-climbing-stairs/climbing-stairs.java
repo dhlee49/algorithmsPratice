@@ -1,12 +1,14 @@
 class Solution {
     public int climbStairs(int n) {
         if(n < 3) return n;
-        int[] climb = new int[n + 1];
-        climb[1] = 1;
-        climb[2] = 2;
+        int climb_two_before = 1;
+        int climb_one_before = 2;
+        int sum = 0;
         for(int i = 3; i <= n; i++) {
-            climb[i] = climb[i - 1] + climb[i - 2];
+            sum = climb_two_before + climb_one_before;
+            climb_two_before = climb_one_before;
+            climb_one_before = sum;
         }
-        return climb[n];
+        return sum;
     }
 }
