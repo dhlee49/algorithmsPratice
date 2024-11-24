@@ -10,17 +10,17 @@ class Solution {
             edgeEntries.putIfAbsent(edge[0], new LinkedList<int[]>());
             edgeEntries.get(edge[0]).add(edge);
         }
-        PriorityQueue<Integer> currDistanceQueue = new PriorityQueue<>();
+        PriorityQueue<int[]> currDistanceQueue = new PriorityQueue<>((a, b) -> a[1] - b[1]);
         //Initial Node
-        currDistanceQueue.offer(k);
+        currDistanceQueue.offer(new int[] {k, 0});
         while(!currDistanceQueue.isEmpty()) {
-            Integer currentNode = currDistanceQueue.poll();
-            if(edgeEntries.containsKey(currentNode)) {
-                for(int[] edge : edgeEntries.get(currentNode)) {
+            int[] currentNode = currDistanceQueue.poll();
+            if(edgeEntries.containsKey(currentNode[0])) {
+                for(int[] edge : edgeEntries.get(currentNode[0])) {
                     int curr = distances[edge[0]] + edge[2];
                     if(curr < distances[edge[1]]) {
                         distances[edge[1]] = curr;
-                        currDistanceQueue.offer(edge[1]);
+                        currDistanceQueue.offer(new int[] {edge[1], curr});
                     }
                 }
             }
