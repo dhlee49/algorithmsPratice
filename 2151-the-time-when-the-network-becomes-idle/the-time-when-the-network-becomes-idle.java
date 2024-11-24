@@ -27,7 +27,7 @@ class Solution {
                 }
             
         }
-        int carry = 1;
+        int carry;
         for(int i = 1; i < patience.length; i++) {
             int curr = distances[i] * 2;
             if(curr % patience[i] == 0) {
