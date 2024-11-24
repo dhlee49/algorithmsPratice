@@ -36,7 +36,6 @@ class Solution {
                 carry = 0;
             }
             distances[i] = curr + (curr / patience[i] - (carry)) * patience[i]  + 1;
-            System.out.println(distances[i]);
         }
         return Arrays.stream(distances).max().orElse(-1);
         
