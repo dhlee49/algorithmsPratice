@@ -1,39 +1,33 @@
 class Foo {
-    private Object lock;
     private boolean first;
     private boolean second;
     public Foo() {
-        lock = new Object();
-        first = true;
-        second = true;
-        
+        first = false;
+        second = false;
     }
 
-    public void first(Runnable printFirst) throws InterruptedException {
-        synchronized(lock) {
-            printFirst.run();
-            first = false;
-            lock.notifyAll();
-        } 
+    public synchronized void first(Runnable printFirst) throws InterruptedException {
         // printFirst.run() outputs "first". Do not change or remove this line.
+        printFirst.run();
+        first = true;
+        notifyAll();
     }
 
-    public void second(Runnable printSecond) throws InterruptedException {
-        synchronized(lock) {
-            while(first) lock.wait();
-            printSecond.run();
-            second = false;
-            lock.notifyAll();
-        } 
+    public synchronized void second(Runnable printSecond) throws InterruptedException {
+        while(!first) {
+            wait();
+        }
         // printSecond.run() outputs "second". Do not change or remove this line.
+        printSecond.run();
+        second = true;
+        notifyAll();
     }
 
-    public void third(Runnable printThird) throws InterruptedException {
-        
+    public synchronized void third(Runnable printThird) throws InterruptedException {
+        while(!second) {
+            wait();
+        }
         // printThird.run() outputs "third". Do not change or remove this line.
-        synchronized(lock) {
-            while(second) lock.wait();
-            printThird.run();
-        } 
+        printThird.run();
     }
 }
