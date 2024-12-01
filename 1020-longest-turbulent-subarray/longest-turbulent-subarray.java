@@ -18,7 +18,6 @@ class Solution {
                 }
             }
             maxSize = Math.max(size, maxSize);
-            System.out.println("I : "  + i + " & " + size);
         }
         size = 1;
         for(int i = 1; i < arr.length; i++) {
@@ -37,7 +36,6 @@ class Solution {
                 }
             }
             maxSize = Math.max(size, maxSize);
-            System.out.println("I : "  + i + " & " + size);
         }
         return maxSize;
     }
