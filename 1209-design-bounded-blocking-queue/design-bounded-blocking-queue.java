@@ -28,8 +28,11 @@ class BoundedBlockingQueue {
         
     }
     
-    public int size() {
-        return this.queue.size();
+    public int size() throws InterruptedException {
+        mutex.acquire(1);
+        int size = this.queue.size();
+        mutex.release(1);
+        return size;
         
     }
 }
