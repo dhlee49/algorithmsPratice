@@ -1,35 +1,35 @@
 class BoundedBlockingQueue {
-    int size;
-    Queue<Integer> queue;
-    Semaphore insertSem = new Semaphore(1);
-    Semaphore removeSem = new Semaphore(0);
-    Semaphore mutex = new Semaphore(1);
+    private final LinkedList<Integer> queue = new LinkedList();
+    private int capacity;
+    private final Semaphore mutex = new Semaphore(1);
+    private final Semaphore enqueSem = new Semaphore(1);
+    private final Semaphore dequeSem = new Semaphore(0);
     public BoundedBlockingQueue(int capacity) {
-        this.queue = new LinkedList();
-        this.size = capacity;
+        this.capacity = capacity;
     }
     
     public void enqueue(int element) throws InterruptedException {
-        insertSem.acquire();
-        mutex.acquire();
+        enqueSem.acquire(1);
+        mutex.acquire(1);
         this.queue.offer(element);
-        if(this.queue.size() == 1) removeSem.release(1);
-        if(this.size > this.queue.size()) insertSem.release(1);
+        if(this.queue.size() == 1) dequeSem.release(1);
+        if(this.queue.size() < this.capacity) enqueSem.release(1);
         mutex.release();
     }
     
     public int dequeue() throws InterruptedException {
-        int val = 0;
-        removeSem.acquire();
-        mutex.acquire();
-        val = this.queue.remove();
-        if(this.queue.size() < this.size) insertSem.release(1);
-        if(this.queue.size() > 0) removeSem.release(1);
-        mutex.release(1);
+        dequeSem.acquire(1);
+        mutex.acquire(1);
+        int val = this.queue.poll();
+        if(this.queue.size() == this.capacity - 1) enqueSem.release(1);
+        if(this.queue.size() > 0) dequeSem.release(1);
+        mutex.release();
         return val;
+        
     }
     
-    public int size() { 
+    public int size() {
         return this.queue.size();
+        
     }
 }
