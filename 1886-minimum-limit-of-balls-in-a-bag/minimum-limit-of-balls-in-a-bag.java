@@ -8,7 +8,6 @@ class Solution {
         int high = Arrays.stream(nums).max().orElse(-1);
         if(high == 1) return 1;
         int count;
-        System.out.println((int) Math.ceil(1000000000 / 750000000));
         int min = high;
         while(low < high){ 
             int mid = (low + high)/2;
@@ -16,7 +15,6 @@ class Solution {
             for(int num : nums) {
                 count += (num - 1) / mid;
             }
-            System.out.println(low + " & " + mid + " & " + high + " & " + count) ;
             if(count > maxOperations) {
                 low = mid + 1;
             } else {
