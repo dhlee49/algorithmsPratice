@@ -1,47 +1,43 @@
 class ZeroEvenOdd {
     private int n;
-    private final Semaphore zeroSem = new Semaphore(1);
-    private final Semaphore evenSem = new Semaphore(0);
-    private final Semaphore oddSem = new Semaphore(0);
-    private int curr;
+    private Semaphore firstSem = new Semaphore(1);
+    private Semaphore secondSem = new Semaphore(0);
+    private Semaphore thirdSem = new Semaphore(0);
+    int curr;
     public ZeroEvenOdd(int n) {
         this.n = n;
-        this.curr = 1;
+        this.curr = 0;
     }
 
     // printNumber.accept(x) outputs "x", where x is an integer.
     public void zero(IntConsumer printNumber) throws InterruptedException {
         while(curr <= n) {
-            zeroSem.acquire();
-            if(curr <= n) {
-                printNumber.accept(0);
-                if(curr % 2 == 0) {
-                    evenSem.release(1);
-                } else {
-                    oddSem.release(1);
-                }
+            firstSem.acquire();
+            curr++;
+            if(curr <= n) printNumber.accept(0);
+            if(curr % 2 == 0) {
+                secondSem.release(1);
             } else {
-                oddSem.release(1);
-                evenSem.release(1);
+                thirdSem.release(1);
             }
         }
+        secondSem.release();
+        thirdSem.release();
     }
 
     public void even(IntConsumer printNumber) throws InterruptedException {
         while(curr <= n) {
-            evenSem.acquire(1);
+            secondSem.acquire();
             if(curr <= n) printNumber.accept(curr);
-            curr++;
-            zeroSem.release(1);
+            firstSem.release();
         }
     }
 
     public void odd(IntConsumer printNumber) throws InterruptedException {
         while(curr <= n) {
-            oddSem.acquire(1);
+            thirdSem.acquire();
             if(curr <= n) printNumber.accept(curr);
-            curr++;
-            zeroSem.release(1);
+            firstSem.release();
         }
     }
 }
