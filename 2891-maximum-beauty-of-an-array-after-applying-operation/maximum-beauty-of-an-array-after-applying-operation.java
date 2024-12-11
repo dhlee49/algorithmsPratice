@@ -1,16 +1,12 @@
 class Solution {
     public int maximumBeauty(int[] nums, int k) {
         Arrays.sort(nums);
-        int i = 0;
-        int j = 1;
+        int j = 0;
         int max = 1;
-        while(i < nums.length - 1) {
-            if(j < i) j++;
-            if(j < nums.length && nums[j] - nums[i] <= 2 * k) {
+        for(int i = 0; i < nums.length; i ++) {
+            while(j < nums.length && nums[j] - nums[i] <= 2 * k) {
+                max = Math.max(max, j - i + 1);
                 j++;
-                max = Math.max(max, j - i);
-            } else {
-                i++;
             }
         }
         return max;
