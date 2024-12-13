@@ -12,11 +12,12 @@ class Solution {
         while(idx < nums.length) {
             int[] curr = index[idx];
             idx++;
-            if(marked[curr[1]]) continue;
+            if(!marked[curr[1]]) {
             marked[curr[1]] = true;
             sum += curr[0];
             if(curr[1] != nums.length - 1) marked[curr[1] + 1] = true;
             if(curr[1] != 0) marked[curr[1] - 1] = true;
+            }
         }
         return sum;
     }
