@@ -1,33 +1,31 @@
 class Solution {
-    int len;
     public List<List<String>> partition(String s) {
         List<List<String>> ans = new LinkedList();
-        len = s.length();
-        List<String> base = new ArrayList();
-        for(char c: s.toCharArray()) {
-            base.add(new String(new char[] {c}));
-        }
-        generateSubList(ans, base, 0);
+        List<String> curr = new LinkedList();
+        makePartition(ans, curr, s, 0);
         return ans;
     }
-    private void generateSubList(List<List<String>> ans, List<String> base, int idx) {
-
-        while(idx < base.size() - 1) {
-            if(base.get(idx).equals(base.get(idx + 1))) {
-                List<String> newBase = new ArrayList(base);
-                String newEntry = newBase.remove(idx) + newBase.remove(idx);
-                newBase.add(idx , newEntry);
-                generateSubList(ans, newBase, idx);
-            } 
-            if(idx > 0 && idx < base.size() - 1 && base.get(idx - 1).equals(base.get(idx + 1))) {
-                List<String> newBase = new ArrayList(base);
-                String newEntry = newBase.remove(idx - 1) + newBase.remove(idx - 1) + newBase.remove(idx - 1);
-                newBase.add(idx - 1, newEntry);
-                generateSubList(ans, newBase, idx - 1);
-            }
-            idx++;
+    private void makePartition(List<List<String>> ans, List<String> curr, String s, int idx) {
+        if(idx == s.length()) {
+            ans.add(curr);
+            return;
         }
-        ans.add(base);
-        
+        for(int i = idx; i < s.length(); i++) {
+            if(isPalindrome(s.substring(idx, i + 1))) {
+                List<String> next = new LinkedList(curr);
+                next.add(s.substring(idx, i + 1));
+                makePartition(ans, next, s, i + 1);
+            }
+        }
+    }
+    private boolean isPalindrome(String s) {
+        int start = 0;
+        int end = s.length() - 1;
+        while(start < end) {
+            if(s.charAt(start) != s.charAt(end)) return false;
+            start++;
+            end--;
+        }
+        return true;
     }
 }
