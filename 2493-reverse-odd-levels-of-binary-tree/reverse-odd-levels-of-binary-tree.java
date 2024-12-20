@@ -43,13 +43,4 @@ class Solution {
         }
         return root;
     }
-    private void swapChild(TreeNode node1, TreeNode node2) {
-        TreeNode tempLeft = node1.left;
-        TreeNode tempRight = node1.right;
-        if(tempLeft == null) return;
-        node1.left = node2.left;
-        node1.right = node2.right;
-        node2.left = tempLeft;
-        node2.right = tempRight;
-    }
 }
