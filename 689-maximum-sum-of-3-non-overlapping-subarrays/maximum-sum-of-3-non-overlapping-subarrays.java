@@ -34,13 +34,11 @@ class Solution {
                 right[i][0] = right[i + 1][0];
                 right[i][1] = right[i + 1][1];
             }
-            System.out.println(i + " : " + right[i][0] + " &&& " + right[i][1]);
         }
         int max = 0;
         for(int i = k; i < nums.length - (k * 2) + 1; i++) {
             int cur = left[i - 1][0] + right[i + k][0] + sumMemo[i + k - 1];
             if(cur > max) {
-                System.out.println(cur + " & " + i);
                 idx1 = left[i - 1][1];
                 idx3 = right[i + k][1];
                 idx2 = i;
