@@ -9,7 +9,6 @@ class Solution {
             prefixSum += nums[i];
             totalSum = prefixSum * que.size();
             while(totalSum >= k) {
-                System.out.println(i);
                 long prev = que.poll();
                 prefixSum -= prev;
                 totalSum = prefixSum * que.size();
