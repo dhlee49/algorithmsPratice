@@ -1,19 +1,24 @@
 class Solution {
     public int jobScheduling(int[] startTime, int[] endTime, int[] profit) {
-        int[][] entries = new int[startTime.length][3];
+        ArrayList<int[]> entries = new ArrayList();
         for(int i = 0; i < startTime.length; i++) {
-            entries[i] = new int[] {startTime[i], endTime[i], profit[i]};
+            entries.add(new int[] {startTime[i], endTime[i], profit[i]});
         }
-        Arrays.sort(entries, (a, b) -> a[1] - b[1]);
-        TreeMap<Integer, Integer> ans = new TreeMap<>();
-        ans.put(0,0);
-        int max = 0;
+        //Sort it by endTime in asecnding order
+        entries.sort((a, b) -> (a[1] - b[1]));
+
+
+        TreeMap<Integer, Integer> sortedEntries = new TreeMap<>((a, b) -> a - b); 
+        sortedEntries.put(0, 0);
+        int prevMax = -1;
         for(int[] entry : entries) {
-            max = ans.floorEntry(entry[0]).getValue() + entry[2];
-            if(max > ans.lastEntry().getValue()) {
-                ans.put(entry[1], max);
+            Map.Entry<Integer, Integer> beforeStart = sortedEntries.floorEntry(entry[0]);
+            Map.Entry<Integer, Integer> beforeEnd = sortedEntries.floorEntry(entry[1]);
+            if(beforeStart.getValue() + entry[2] > beforeEnd.getValue()){
+                sortedEntries.put(entry[1], beforeStart.getValue() + entry[2]);
             }
+
         }
-        return ans.lastEntry().getValue();
+        return sortedEntries.lastEntry().getValue();
     }
 }
