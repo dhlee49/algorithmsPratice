@@ -1,37 +1,34 @@
 class Solution {
     public int shortestPath(int[][] grid, int k) {
-        int rows = grid.length, cols = grid[0].length;
+        //use BFS approach
         boolean[][][] visited = new boolean[grid.length][grid[0].length][k + 1];
-        int[] entry = new int[] {0, 0, k};
-        Queue<int[]> bfs = new LinkedList();
-        int[][] directions = {
-            {-1, 0},
-            {1, 0},
-            {0, -1},
-            {0, 1}
-        };
-        bfs.offer(entry);
-        if(rows == 1 && cols == 1) return 0;
+        Queue<int[]> qu = new LinkedList();
+        qu.offer(new int[] {0, 0, k});
         visited[0][0][k] = true;
-        int result = 0;
-        while(!bfs.isEmpty()) {
-            result++;
-            int size = bfs.size();
+        int cnt = 0;
+        int[][] directions = new int[][] {{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
+        while(!qu.isEmpty()) {
+            int size  = qu.size();
             for(int i = 0; i < size; i++) {
-                int[] curr = bfs.poll();
+                int[] curr = qu.poll();
+                int x = curr[0];
+                int y = curr[1];
+                int curK = curr[2];
+                //Base case - reached the end
+                if(x == grid.length - 1 && y == grid[0].length - 1) return cnt;
                 for(int[] direction : directions) {
-                    int x = curr[0] + direction[0];
-                    int y = curr[1] + direction[1];
-                    if(x < 0 || x >= grid.length || y < 0 || y >= grid[0].length) continue;
-                    int curK = curr[2] - grid[x][y];
-                    if(x == grid.length - 1 && y == grid[0].length - 1 && curK >= 0)   return result;
-                    if(curK < 0) continue;
-                    if(!visited[x][y][curK]) {
-                        bfs.offer(new int[] {x, y, curK});
-                        visited[x][y][curK] = true;
-                    }
+                    int newX = x + direction[0];
+                    int newY = y + direction[1];
+                    if(newX < 0 || newX >= grid.length || newY < 0 || newY >= grid[0].length) continue;
+                    int newK = curK - grid[newX][newY];
+                    if(newK < 0) continue;
+                    //Base case - dupe
+                    if(visited[newX][newY][newK]) continue;
+                    visited[newX][newY][newK] = true;
+                    qu.offer(new int[] {newX, newY, newK});
                 }
             }
+            cnt++;
         }
         return -1;
     }
