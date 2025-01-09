@@ -28,8 +28,6 @@ class AutocompleteSystem {
         }
         private List<String> getTop3() {
             List<String> ans = new ArrayList(this.hotness.keySet());
-            System.out.println("");
-            System.out.println("List");
 
             for(Map.Entry<String, Integer> s : hotness.entrySet()) System.out.print(s.getKey() + "  & " + s.getValue() + " || ");
             ans.sort((a, b) -> {
