@@ -29,7 +29,6 @@ class AutocompleteSystem {
         private List<String> getTop3() {
             List<String> ans = new ArrayList(this.hotness.keySet());
 
-            for(Map.Entry<String, Integer> s : hotness.entrySet()) System.out.print(s.getKey() + "  & " + s.getValue() + " || ");
             ans.sort((a, b) -> {
                 int x = this.hotness.get(a);
                 int y = this.hotness.get(b);
