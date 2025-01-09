@@ -1,33 +1,26 @@
 class Solution {
     public List<String> addOperators(String num, int target) {
-        String left = num.substring(0,1);
         List<String> answer = new LinkedList();
-        if(num == null || num.length() == 0) {
-            return answer;
-        }
-        getExpression(num, target, answer, 0, "", 0, 0);
+        getExpression("", 0, num, target,0L, 0L, answer);
         return answer;
     }
-    private void getExpression(String num, int target, List<String> answer, int idx, String expr, long total, long prev) {
+    private void getExpression(String expr, int idx, String num, int target, Long total, Long prev, List<String> answer) {
         if(idx == num.length()) {
-            if(target == total) answer.add(expr);
+            if(total == target) answer.add(expr);
             return;
         }
         for(int i = idx; i < num.length(); i++) {
-            //Nothing should start 0 and append more
-            if(i != idx && num.charAt(idx) == '0') break;
-            //Curr is valid string length varying from idx -> idx ~ num.length
-            String curr = num.substring(idx, i + 1);
-            long currVal = Long.valueOf(curr);
-            //Base case 
+            String curString = num.substring(idx, i + 1);
+            Long curr = Long.valueOf(curString);
+            if(num.charAt(idx) == '0' && i != idx) continue;
             if(idx == 0) {
-                getExpression(num, target, answer, i + 1, curr, currVal, currVal);
+                getExpression(curString, i + 1, num, target, curr, curr, answer);
             } else {
-                //Follow up cases, where you have prev & expr
-                getExpression(num, target, answer, i + 1, expr + "+" + curr, total + currVal, currVal);
-                getExpression(num, target, answer, i + 1, expr + "-" + curr, total - currVal , -currVal);
-                getExpression(num, target, answer, i + 1, expr + "*" + curr, total - prev + (prev * currVal), prev * currVal);
+                getExpression(expr + "+" + curString, i + 1, num, target, total + curr, curr, answer);
+                getExpression(expr + "-" + curString, i + 1, num, target, total - curr, -curr, answer);
+                getExpression(expr + "*" + curString, i + 1, num, target, total - prev + (curr * prev), curr * prev, answer);
             }
         }
     }
+    
 }
