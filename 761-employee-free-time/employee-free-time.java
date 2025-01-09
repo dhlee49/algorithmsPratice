@@ -15,26 +15,27 @@ class Interval {
 
 class Solution {
     public List<Interval> employeeFreeTime(List<List<Interval>> schedule) {
-        List<Interval> allUsers = new LinkedList();
-        List<Interval> freeTime = new LinkedList();
+        List<Interval> allWork = new ArrayList();
         for(List<Interval> sched : schedule) {
-            for(Interval interval : sched) allUsers.add(interval);
+            for(Interval intv : sched) {
+                allWork.add(intv);
+            }
         }
-        Collections.sort(allUsers, (a, b) -> a.start - b.start);
-        
+        allWork.sort((a, b) -> a.start - b.start);
         Interval curr = null;
-        for(Interval inv : allUsers) {
+        List<Interval> ans = new LinkedList();
+        for(Interval work : allWork) {
             if(curr == null) {
-                curr = inv;
+                curr = work;
                 continue;
             }
-            if(inv.start > curr.end) {
-                freeTime.add(new Interval(curr.end, inv.start));
-                curr = inv;
+            if(curr.end < work.start) {
+                ans.add(new Interval(curr.end, work.start));
+                curr.end = work.end;
             } else {
-                curr.end = Math.max(curr.end, inv.end);
+                curr.end = Math.max(curr.end, work.end);
             }
         }
-        return freeTime;
+        return ans;
     }
 }
