@@ -1,20 +1,19 @@
 class Solution {
     public long countSubarrays(int[] nums, long k) {
+        Queue<Integer> sumQ = new LinkedList();
         long prefixSum = 0;
         long totalSum = 0;
-        long cnt = 0;
-        Queue<Integer> que = new LinkedList();
-        for(int i = 0; i < nums.length; i++) {
-            que.offer(nums[i]);
-            prefixSum += nums[i];
-            totalSum = prefixSum * que.size();
+        long total = 0;
+        for(int i : nums) {
+            prefixSum+= i;
+            sumQ.offer(i);
+            totalSum = sumQ.size() * prefixSum;
             while(totalSum >= k) {
-                long prev = que.poll();
-                prefixSum -= prev;
-                totalSum = prefixSum * que.size();
+                prefixSum -= sumQ.poll();
+                totalSum = sumQ.size() * prefixSum;
             }
-            cnt += que.size();
+            total += sumQ.size();
         }
-        return cnt;   
+        return total;
     }
 }
