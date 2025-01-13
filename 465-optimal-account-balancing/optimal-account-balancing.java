@@ -1,30 +1,31 @@
 class Solution {
     public int minTransfers(int[][] transactions) {
-        Map<Integer, Integer> entries = new HashMap();
+        Map<Integer, Integer> balances = new HashMap();
         for(int[] transaction : transactions) {
-            entries.putIfAbsent(transaction[0], 0);
-            entries.putIfAbsent(transaction[1], 0);
-            entries.computeIfPresent(transaction[0], (k,v) -> v - transaction[2]);
-            entries.computeIfPresent(transaction[1], (k,v) -> v + transaction[2]);
+            balances.putIfAbsent(transaction[0], 0);
+            balances.putIfAbsent(transaction[1], 0);
+            balances.computeIfPresent(transaction[0], (k, v) -> v - transaction[2]);
+            balances.computeIfPresent(transaction[1], (k, v) -> v + transaction[2]);
         }
-        int[] values = new int[entries.size()];
+        int[] memo = new int[balances.size()];
         int i = 0;
-        for(Integer key : entries.keySet()) {
-            values[i++] = entries.get(key);
+        for(Integer key : balances.keySet()) {
+            memo[i++] = balances.get(key);
         }
-        return dfs(0, values);
+        return dfs(0, memo);
     }
-    private int dfs(int idx, int[] values) {
-        if(idx == values.length) return 0;
-        //This account cannot perform any transaction
-        if(values[idx] == 0) return dfs(idx + 1, values);
-        int max = Integer.MAX_VALUE;
-        for(int i = idx + 1; i < values.length; i++) {
-            if(values[idx] * values[i] >= 0) continue;
-            values[i] += values[idx];
-            max = Math.min(max, 1 + dfs(idx + 1, values));
-            values[i] -= values[idx];
+    //5 0 -5 -4 4
+
+    private int dfs(int idx, int[] memo) {
+        if(idx == memo.length) return 0;
+        if(memo[idx] == 0) return 0 + dfs(idx + 1, memo);
+        int maxVal = Integer.MAX_VALUE;
+        for(int i = idx + 1; i < memo.length; i++) {
+            if(memo[idx] * memo[i] >= 0) continue;
+            memo[i] += memo[idx];
+            maxVal = Math.min(maxVal, 1 + dfs(idx + 1, memo));
+            memo[i] -= memo[idx];
         }
-        return max;
+        return maxVal;
     }
 }
