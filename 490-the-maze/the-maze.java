@@ -23,7 +23,6 @@ class Solution {
                     x -= direction[0];
                     y -= direction[1]; 
                     if(visited[x][y]) continue;
-                    System.out.println(x + "& " + y);
                     bfsQueue.offer(new int[] {x, y});
                     visited[x][y] = true;
                 }
