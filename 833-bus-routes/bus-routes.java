@@ -3,6 +3,7 @@ class Solution {
         if(source == target) return 0;
         Map<Integer, List<Integer>> stopGraph = new HashMap();
         int i = 0;
+        
         for(int[] route : routes) {
             for(int stop : route) {
                 stopGraph.putIfAbsent(stop, new LinkedList());
@@ -10,6 +11,9 @@ class Solution {
             }
             i++;
         };
+        if(!stopGraph.containsKey(source) || !stopGraph.containsKey(target)){
+            return -1;
+        }
         Queue<Integer> bfsQueue = new LinkedList();
         Set<Integer> busRode = new HashSet();
         Set<Integer> stoppedAt = new HashSet();
@@ -21,9 +25,7 @@ class Solution {
             busRode.add(bus);
         }
         int cnt = 1;
-        if(!stopGraph.containsKey(source)||!stopGraph.containsKey(target)){
-            return -1;
-        }
+
         while(!bfsQueue.isEmpty()) {
             int size = bfsQueue.size();
             for(int j = 0; j < size; j++) {
