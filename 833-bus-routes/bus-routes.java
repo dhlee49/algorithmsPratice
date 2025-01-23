@@ -2,14 +2,11 @@ class Solution {
     public int numBusesToDestination(int[][] routes, int source, int target) {
         if(source == target) return 0;
         Map<Integer, List<Integer>> stopGraph = new HashMap();
-        Map<Integer, List<Integer>> busGraph = new HashMap();
         int i = 0;
         for(int[] route : routes) {
-            busGraph.putIfAbsent(i, new LinkedList());
             for(int stop : route) {
                 stopGraph.putIfAbsent(stop, new LinkedList());
                 stopGraph.get(stop).add(i);
-                busGraph.get(i).add(stop);
             }
             i++;
         };
@@ -17,12 +14,11 @@ class Solution {
         Set<Integer> busRode = new HashSet();
         Set<Integer> stoppedAt = new HashSet();
         for(int bus : stopGraph.getOrDefault(source, new LinkedList<Integer>())) {
-            for(int stop : busGraph.get(bus)) {
+            for(int stop : routes[bus]) {
                 bfsQueue.offer(stop);
                 stoppedAt.add(stop);
             }
             busRode.add(bus);
-            
         }
         int cnt = 1;
         if(!stopGraph.containsKey(source)||!stopGraph.containsKey(target)){
@@ -36,7 +32,7 @@ class Solution {
                 if(currStop == target) return cnt;
                 for(int bus : stopGraph.get(currStop)) {
                     if(busRode.contains(bus)) continue;
-                    for(int stop : busGraph.get(bus)) {
+                    for(int stop : routes[bus]) {
                         if(stoppedAt.contains(stop)) continue;
                         bfsQueue.offer(stop);
                         stoppedAt.add(stop);
