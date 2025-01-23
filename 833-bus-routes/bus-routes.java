@@ -1,44 +1,42 @@
 class Solution {
     public int numBusesToDestination(int[][] routes, int source, int target) {
         if(source == target) return 0;
-        HashMap<Integer, Set<Integer>> stopToBus = new HashMap();
-        for(int i = 0; i < routes.length; i++) {
-            for(int x : routes[i]) {
-                stopToBus.putIfAbsent(x, new HashSet());
-                stopToBus.get(x).add(i);
+        Map<Integer, List<Integer>> stopGraph = new HashMap();
+        Map<Integer, List<Integer>> busGraph = new HashMap();
+        int i = 0;
+        for(int[] route : routes) {
+            busGraph.putIfAbsent(i, new LinkedList());
+            for(int stop : route) {
+                stopGraph.putIfAbsent(stop, new LinkedList());
+                stopGraph.get(stop).add(i);
+                busGraph.get(i).add(stop);
             }
+            i++;
+        };
+        Queue<Integer> bfsQueue = new LinkedList();
+        Set<Integer> busRode = new HashSet();
+        for(int bus : stopGraph.getOrDefault(source, new LinkedList<Integer>())) {
+            for(int stop : busGraph.get(bus)) bfsQueue.offer(stop);
+            busRode.add(bus);
         }
-        //Now i have 
-        //stopToBus : Bus stop -> Bus #
-        HashSet<Integer> visitedBus = new HashSet<>();
-        HashSet<Integer> visitedStation = new HashSet<>();
-        Queue<Integer> bfs = new LinkedList<>();
-        bfs.offer(source);
-        int size = 0;
-        int count = 0;
-        while(!bfs.isEmpty()) {
-            count++;
-            size = bfs.size();
-            //Pull out all stops in current iteration
-            for(int i = 0; i < size; i++) {
-                //Curr = station
-                int curr = bfs.poll();
-                if(visitedStation.contains(curr)) continue;
-                visitedStation.add(curr);
-                //Station does not have any route available
-                if(!stopToBus.containsKey(curr)) continue;
-                for(int bus: stopToBus.get(curr)) {
-                    if(visitedBus.contains(bus)) continue;
-                    visitedBus.add(bus);
-                    for(int stop : routes[bus]) {
-                        if(stop == target) return count;
-                        bfs.offer(stop);
+
+        int cnt = 1;
+        while(!bfsQueue.isEmpty()) {
+            int size = bfsQueue.size();
+            for(int j = 0; j < size; j++) {
+                //We are at this stop at this 'cnt' iteration of buses;
+                int currStop = bfsQueue.poll();
+                if(currStop == target) return cnt;
+                for(int bus : stopGraph.get(currStop)) {
+                    if(busRode.contains(bus)) continue;
+                    for(int stop : busGraph.get(bus)) {
+                        bfsQueue.offer(stop);
                     }
+                    busRode.add(bus);
                 }
             }
-            
+            cnt++;
         }
-        //If we reach here we went through every bus and didnt find it
         return -1;
     }
 }
