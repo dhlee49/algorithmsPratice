@@ -25,6 +25,9 @@ class Solution {
             
         }
         int cnt = 1;
+        if(!stopGraph.containsKey(source)||!stopGraph.containsKey(target)){
+            return -1;
+        }
         while(!bfsQueue.isEmpty()) {
             int size = bfsQueue.size();
             for(int j = 0; j < size; j++) {
