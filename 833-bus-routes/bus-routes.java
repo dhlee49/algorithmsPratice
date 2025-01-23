@@ -15,11 +15,15 @@ class Solution {
         };
         Queue<Integer> bfsQueue = new LinkedList();
         Set<Integer> busRode = new HashSet();
+        Set<Integer> stoppedAt = new HashSet();
         for(int bus : stopGraph.getOrDefault(source, new LinkedList<Integer>())) {
-            for(int stop : busGraph.get(bus)) bfsQueue.offer(stop);
+            for(int stop : busGraph.get(bus)) {
+                bfsQueue.offer(stop);
+                stoppedAt.add(stop);
+            }
             busRode.add(bus);
+            
         }
-
         int cnt = 1;
         while(!bfsQueue.isEmpty()) {
             int size = bfsQueue.size();
@@ -30,7 +34,9 @@ class Solution {
                 for(int bus : stopGraph.get(currStop)) {
                     if(busRode.contains(bus)) continue;
                     for(int stop : busGraph.get(bus)) {
+                        if(stoppedAt.contains(stop)) continue;
                         bfsQueue.offer(stop);
+                        stoppedAt.add(stop);
                     }
                     busRode.add(bus);
                 }
