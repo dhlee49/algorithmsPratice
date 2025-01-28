@@ -17,8 +17,6 @@ class Solution {
             int[] curr = bfsQueue.poll();
             int x = curr[0];
             int y = curr[1];
-            System.out.println(x + "  & " + y);
-            System.out.println(mat[x][y]);
             for(int[] direction : directions) {
                 x = curr[0] + direction[0];
                 y = curr[1] + direction[1];
