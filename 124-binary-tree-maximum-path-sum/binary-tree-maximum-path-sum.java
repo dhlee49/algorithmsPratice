@@ -26,8 +26,8 @@ class Solution {
         // 1. Include this + left 2. Include this + rgiht 3. End it here
         int leftSum = pathSum(curr.left);
         int rightSum = pathSum(curr.right);
-        max = Math.max(max, rightSum);
-        max = Math.max(max, leftSum);
+        //max = Math.max(max, rightSum);
+        //max = Math.max(max, leftSum);
         max = Math.max(max, curr.val);
         max = Math.max(max, leftSum + rightSum + curr.val);
         max = Math.max(max, leftSum + curr.val);
