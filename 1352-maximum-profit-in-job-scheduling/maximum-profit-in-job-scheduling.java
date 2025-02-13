@@ -36,7 +36,6 @@ class Solution {
                 l = mid + 1;
             }
         }
-        System.out.println("result : " + l);
         return l - 1;
         
     }
