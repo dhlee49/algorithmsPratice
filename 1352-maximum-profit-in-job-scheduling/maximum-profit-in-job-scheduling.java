@@ -26,7 +26,6 @@ class Solution {
         //There is 0,0 as base entry so you are guranteed to find something
         int l = 0;
         int r = entryList.size();
-        System.out.println("For start time : "  + startTime);
         while(r > l) {
             int mid = l + (r - l) / 2;
             int[] curr = entryList.get(mid);
