@@ -16,16 +16,25 @@
 class Solution {
     int max = Integer.MIN_VALUE;
     public int maxPathSum(TreeNode root) {
-        getPathSum(root);
+        pathSum(root);
         return max;
     }
-    private int getPathSum(TreeNode node) {
-        if(node == null) return 0;
-        int left = getPathSum(node.left);
-        int right = getPathSum(node.right);
-        int curr = Math.max(node.val, Math.max(left, right) + node.val);
-        int curMax = Math.max(curr, left + right + node.val);
-        if(curMax > max) max = curMax;
-        return curr;
+    private int pathSum(TreeNode curr) {
+        //Base case you reach end of tree
+        if(curr == null) return -1001;
+        //3 Cases of max sum
+        // 1. Include this + left 2. Include this + rgiht 3. End it here
+        int leftSum = pathSum(curr.left);
+        int rightSum = pathSum(curr.right);
+        max = Math.max(max, rightSum);
+        max = Math.max(max, leftSum);
+        max = Math.max(max, curr.val);
+        max = Math.max(max, leftSum + rightSum + curr.val);
+        max = Math.max(max, leftSum + curr.val);
+        max = Math.max(max, rightSum + curr.val);
+        int currentMax = Math.max(leftSum + curr.val, rightSum + curr.val);
+        currentMax = Math.max(currentMax, curr.val);
+        return currentMax; 
     }
+    
 }
