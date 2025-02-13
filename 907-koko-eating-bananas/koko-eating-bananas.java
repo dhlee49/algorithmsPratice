@@ -5,7 +5,7 @@ class Solution {
         int mid = 0;
         long cnt = 0;
         int ans = r;
-        while(r >= l) {
+        while(r > l) {
             mid = l + (r - l) / 2;
             cnt = 0;
             for(int pile : piles) {
@@ -16,7 +16,7 @@ class Solution {
             if(cnt > h) {
                 l = mid + 1;
             } else {
-                r = mid - 1;
+                r = mid;
             }
         }
         return ans;
